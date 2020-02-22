@@ -178,9 +178,10 @@ greater than 1, verbose debugs will be produced.</p></td>
 <dt>fnr</dt><dd><p>false negative rate</p></dd>
 <dt>fdr</dt><dd><p>false discovery rate</p></dd>
 <dt>accuracy</dt><dd><p>accuracy</p></dd>
-<dt>f1</dt><dd><p>F1 score</p></dd>
-<dt>f2</dt><dd><p>F2 score</p></dd>
-<dt>f05</dt><dd><p>F0.5 score</p></dd>
+<dt>f1</dt><dd><p>F1 score (2*TP/(2*TP+FN+FP))</p></dd>
+<dt>f2</dt><dd><p>F2 score (5*TP/(5*TP+4*FN+FP))</p></dd>
+<dt>f05</dt><dd><p>F0.5 score (1.25*TP/(1.25*TP+0.25*FN+FP))</p></dd>
+<dt>correspondence</dt><dd><p>correspondence score (TP/(TP+FN+FP))</p></dd>
 <dt>mcc</dt><dd><p>Matthews correlation coefficient</p></dd>
 <dt>informedness</dt><dd><p>informedness</p></dd>
 <dt>markedness</dt><dd><p>markedness</p></dd>
@@ -263,10 +264,13 @@ Available online at <a href='http://www.bioinfo.in/contents.php?id=51'>http://ww
 #&gt; [1] 0.9503916
 #&gt; 
 #&gt; $f2
-#&gt; [1] 0.9763948
+#&gt; [1] 0.9257375
 #&gt; 
 #&gt; $f05
-#&gt; [1] 0.9257375
+#&gt; [1] 0.9763948
+#&gt; 
+#&gt; $correspondence
+#&gt; [1] 0.9054726
 #&gt; 
 #&gt; $mcc
 #&gt; [1] 0.2334855
@@ -339,10 +343,13 @@ Available online at <a href='http://www.bioinfo.in/contents.php?id=51'>http://ww
 #&gt; [1] 0.8
 #&gt; 
 #&gt; $f2
-#&gt; [1] 0.7142857
+#&gt; [1] 0.9090909
 #&gt; 
 #&gt; $f05
-#&gt; [1] 0.9090909
+#&gt; [1] 0.7142857
+#&gt; 
+#&gt; $correspondence
+#&gt; [1] 0.6666667
 #&gt; 
 #&gt; $mcc
 #&gt; [1] 0.6666667
@@ -371,25 +378,24 @@ Available online at <a href='http://www.bioinfo.in/contents.php?id=51'>http://ww
   <span class='fu'><a href='https://rdrr.io/r/base/with.html'>with</a></span>(<span class='no'>pi</span>,<span class='fu'><a href='catnl.html'>catnl</a></span>(
     <span class='st'>'acc: '</span>,<span class='no'>accuracy</span>,
     <span class='st'>', sp+se: '</span>,<span class='no'>sensitivity</span>+<span class='no'>specificity</span>,
-    <span class='st'>', agr: '</span>,<span class='no'>m</span>[<span class='fl'>2</span>,<span class='fl'>2</span>]/(<span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='no'>m</span>)-<span class='no'>m</span>[<span class='fl'>1</span>,<span class='fl'>1</span>]),
-    <span class='st'>', agr3: '</span>,(<span class='fl'>2</span>*<span class='no'>sensitivity</span>+<span class='no'>specificity</span>+<span class='no'>ppv</span>)/<span class='fl'>4</span>,
+    <span class='st'>', correspondence: '</span>,<span class='no'>correspondence</span>,
     <span class='st'>', F1: '</span>,<span class='no'>f1</span>,
-    <span class='st'>', f2: '</span>,<span class='no'>f2</span>))
+    <span class='st'>', F2: '</span>,<span class='no'>f2</span>,<span class='kw'>sep</span><span class='kw'>=</span><span class='st'>''</span>))
 }</div><div class='output co'>#&gt; m
 #&gt;      [,1] [,2]
 #&gt; [1,]   98    2
 #&gt; [2,]    2    8
-#&gt; acc:  0.9636364 , sp+se:  1.78 , agr:  0.6666667 , agr3:  0.845 , F1:  0.8 , f2:  0.8 
+#&gt; acc: 0.9636364, sp+se: 1.78, correspondence: 0.6666667, F1: 0.8, F2: 0.8
 #&gt; m
 #&gt;      [,1] [,2]
 #&gt; [1,]    8    2
 #&gt; [2,]    2    8
-#&gt; acc:  0.8 , sp+se:  1.6 , agr:  0.6666667 , agr3:  0.8 , F1:  0.8 , f2:  0.8 
+#&gt; acc: 0.8, sp+se: 1.6, correspondence: 0.6666667, F1: 0.8, F2: 0.8
 #&gt; m
 #&gt;      [,1] [,2]
 #&gt; [1,]   80    2
 #&gt; [2,]   20    8
-#&gt; acc:  0.8 , sp+se:  1.6 , agr:  0.2666667 , agr3:  0.6714286 , F1:  0.4210526 , f2:  0.3278689 </div><div class='input'>
+#&gt; acc: 0.8, sp+se: 1.6, correspondence: 0.2666667, F1: 0.4210526, F2: 0.5882353</div><div class='input'>
 <span class='co'># make degenerated table proper 2x2 table</span>
 <span class='no'>i1</span><span class='kw'>&lt;-</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>,<span class='fl'>1</span>,<span class='fl'>1</span>,<span class='fl'>1</span>)
 <span class='no'>i2</span><span class='kw'>&lt;-</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>,<span class='fl'>1</span>,<span class='fl'>2</span>,<span class='fl'>2</span>)
